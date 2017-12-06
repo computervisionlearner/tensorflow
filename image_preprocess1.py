@@ -1,6 +1,7 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
+#注意：tf.image.sample_distorted_bounding_box每次产生的返回值都不一样，都是随机的
 with tf.gfile.FastGFile('orange.jpg','rb') as f:
   encode_img = f.read()
 
@@ -22,7 +23,8 @@ begin, size, bbox_for_draw = tf.image.sample_distorted_bounding_box(tf.shape(cro
 batched = tf.expand_dims(croped_image, 0)
 image_with_box = tf.image.draw_bounding_boxes(batched, bbox_for_draw)
 distorted_img = tf.slice(croped_image, begin, size)
-
+#distorted_img和distorted_img1是一样的。
+distorted_img1 = tf.image.crop_to_bounding_box(img, begin[0], begin[1], size[0], size[1])
 results.extend([decoded_img, croped_image, image_with_box, distorted_img])
 with tf.Session() as sess:
   results_ = sess.run(results)
