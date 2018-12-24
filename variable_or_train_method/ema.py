@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Dec  5 17:11:27 2017
+Created on Mon Dec 24 19:14:01 2018
+
 @author: no1
 """
 
@@ -45,8 +46,7 @@ def get_batches(num_batches,N = 2, batch_size = 1):
             start = 0
         end = start + batch_size
         yield x[start : end], y[start : end ]
-            
-
+           
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     step = 0
@@ -55,7 +55,9 @@ with tf.Session() as sess:
         step += 1
         print(loss_value)
     saver.save(sess, save_path)
-
+    print("avg weight", sess.run(ema.average(w)))  #与第84行的值一致，权重的滑动平均
+    print("avg bias", sess.run(ema.average(b)))
+    
 
 ckpt_reader = tf.train.NewCheckpointReader(save_path)
 ckpt_vars = ckpt_reader.get_variable_to_shape_map()
@@ -72,7 +74,7 @@ with tf.Session() as sess:
     for v in tf.trainable_variables():
         print ('\t', v.name, v.eval())
 
-print ("==============================================")
+print ("============================================")
 print ("variables restored from ExponentialMovingAverage:")
 with tf.Session() as sess:
     variables_to_restore = ema.variables_to_restore()
