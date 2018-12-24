@@ -79,4 +79,4 @@ with tf.Session() as sess:
     saver = tf.train.Saver(variables_to_restore)
     saver.restore(sess, save_path)
     for v in tf.trainable_variables():
-print ('\t', v.name, v.eval())
+      print ('\t', v.name, v.eval())
